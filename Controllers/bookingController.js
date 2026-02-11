@@ -9,7 +9,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
   const service = await Service.findById(serviceId);
 
   //Find the service and check is that exist
-  if (!service || !service.isActive) {
+  if (!service || !service.active) {
     return next(new AppError('There is no service exist with that id', 404));
   }
 
@@ -86,7 +86,7 @@ exports.updateStatus = catchAsync(async (req, res, next) => {
 exports.cancelBooking = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const booking = await Booking.findOne({ userId, _id: req.params.id });
-  if (!booking) {
+  if (!booking || booking.status === 'cancelled') {
     return next(new AppError('There is no booking for that id!', 400));
   }
   booking.status = 'cancelled';

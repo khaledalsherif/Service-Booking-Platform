@@ -22,7 +22,7 @@ app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-console.log(process.env.NODE_ENV);
+
 //limiting reqs
 const limiter = rateLimit({
   max: 100,

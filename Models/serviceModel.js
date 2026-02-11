@@ -51,8 +51,5 @@ serviceSchema.pre(/^find/, function () {
   this.find({ active: { $ne: false } });
 });
 
-//Methods
-serviceSchema.methods.isActive = () => this.active;
-
 const sercive = mongoose.model('Service', serviceSchema);
 module.exports = sercive;

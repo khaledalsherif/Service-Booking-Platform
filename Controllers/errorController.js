@@ -38,5 +38,4 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJsonWebTokenError();
     sendErrorProd(error, res);
   }
-  next();
 };
