@@ -30,7 +30,7 @@ No frontend, payments, or email in MVP.
 
 ```env
 PORT=3000
-DATABASE_LOCAL=mongodb://127.0.0.1:27017/service-booking
+DATABASE_LOCAL=mongodb://localhost:27017/service-booking
 JWT_SECRET=your_secret
 JWT_EXPIRES_IN=7d
 JWT_COOKIE_EXPIRES_IN=7
