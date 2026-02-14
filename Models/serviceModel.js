@@ -7,7 +7,7 @@ const serviceSchema = mongoose.Schema(
       required: [true, 'The service must have a name!'],
       trim: true,
       index: true,
-      // unique : [true,'Service name must be unique.']
+      unique: [true, 'Service name must be unique.'],
     },
     price: {
       type: Number,
@@ -20,7 +20,7 @@ const serviceSchema = mongoose.Schema(
       },
     },
     duration: {
-      type: Number, // duration in minute
+      type: Number,
       required: [true, 'Please put duration in minute!'],
       validate: {
         validator: function (el) {
@@ -42,8 +42,6 @@ const serviceSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-    // toJSON: { virtuals: true },
-    // toObject: { virtuals: true },
   },
 );
 
