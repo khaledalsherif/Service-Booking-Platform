@@ -5,11 +5,10 @@ const bookingController = require('../Controllers/bookingController');
 
 const router = express.Router();
 
-//router.use(authController.protect)
 router.get(
-  '/getMyBooking',
+  '/getMyBookings',
   authController.protect,
-  bookingController.getMyBooking,
+  bookingController.getMyBookings,
 );
 
 router

@@ -30,22 +30,8 @@ const createAndSendToken = (user, statusCode, res) => {
     },
   });
 };
-// const verifyToken = function (token, secret) {
-//   return new Promise((resolve, reject) => {
-//     jwt.verify(token, secret, (err, decoded) => {
-//       if (err) reject(err);
-//       else resolve(decoded);
-//     });
-//   });
-// };
 
 exports.protect = catchAsync(async (req, res, next) => {
-  //1)Getting token and check if it's there
-  //2)Verification token
-  //3)Check if user still exist
-  //4)Check if the user change the password after token was issued
-  //GRANT ACCESS TO PROTECTED ROUTE
-  /*...........(1)............*/
   let token;
   if (
     req.headers.authorization &&
@@ -59,11 +45,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  /*...........(2)............*/
-
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  /*...........(3)............*/
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(
@@ -73,13 +56,12 @@ exports.protect = catchAsync(async (req, res, next) => {
       ),
     );
   }
-  /*...........(4)............*/
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
       new AppError('User recently changed password! please log in again', 401),
     );
   }
-  /*..........GRAND ACCESS............*/
+
   req.user = currentUser;
   next();
 });
@@ -102,19 +84,15 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  //Check if the email and the pass fields are exist in body
   if (!email || !password) {
     return next(new AppError('Please provide email and the password!', 400)); // 400 bad request
   }
 
-  //Check if the email exist and the password is correct
-
   const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401)); //401 Unauthorized
+    return next(new AppError('Incorrect email or password', 401));
   }
 
-  //Login the user , send token
   createAndSendToken(user, 200, res);
 });

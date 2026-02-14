@@ -10,14 +10,11 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-  //Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
     });
-
-    //Programming or unknown error: don't leak error details . (Generic message error)
   } else {
     res.status(500).json({
       status: 'error',
@@ -25,7 +22,6 @@ const sendErrorProd = (err, res) => {
     });
   }
 };
-//401 Unauthorized
 const handleJsonWebTokenError = () =>
   new AppError('Invalid token, Please logged in again!', 401);
 
@@ -33,8 +29,8 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = Object.create(err); //let error = Object.create(err);
-    //JsonWebTokenError
+    let error = Object.create(err);
+
     if (error.name === 'JsonWebTokenError') error = handleJsonWebTokenError();
     sendErrorProd(error, res);
   }

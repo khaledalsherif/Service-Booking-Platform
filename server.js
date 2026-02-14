@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
 dotenv.config({ path: './config.env' });
 
 const app = require('./app');
@@ -30,6 +31,3 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
-
-//"express": "^5.2.1"
-//"mongoose": "^9.1.5"

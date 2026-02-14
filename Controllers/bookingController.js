@@ -8,14 +8,12 @@ exports.createBooking = catchAsync(async (req, res, next) => {
   const { serviceId } = req.body;
   const service = await Service.findById(serviceId);
 
-  //Find the service and check is that exist
   if (!service || !service.active) {
     return next(new AppError('There is no service exist with that id', 404));
   }
 
   const userId = req.user._id;
 
-  //Create booking
   const booking = await Booking.create({
     userId,
     serviceId,
@@ -48,7 +46,7 @@ exports.getAllBooking = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getMyBooking = catchAsync(async (req, res, next) => {
+exports.getMyBookings = catchAsync(async (req, res, next) => {
   const bookings = await Booking.find({ userId: req.user._id });
   if (!bookings || bookings.length === 0 || bookings.status === 'cancelled') {
     next(new AppError('You have no bookings yet!', 404));
