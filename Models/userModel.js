@@ -52,7 +52,6 @@ const userSchema = mongoose.Schema({
   },
 });
 
-//Hash the password before store it in DB if changed
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 12);
@@ -67,18 +66,15 @@ userSchema.pre('save', function () {
 userSchema.pre(/^find/, function () {
   this.find({ active: { $ne: false } });
 });
-//Methods
+
 userSchema.methods.correctPassword = async (candidatePassword, userPassword) =>
   await bcrypt.compare(candidatePassword, userPassword);
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
-  //decoded.iat (in protect auth)
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(this.passwordChangedAt / 1000, 10);
-    //Check if the token send before changing the password (The password changed)
     return JWTTimestamp < changedTimestamp;
   }
-  //The password didn't changed
   return false;
 };
 
